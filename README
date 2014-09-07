@@ -1,0 +1,18 @@
+This is my first time using Python, and I like making games, so I’m also learning the pygame engine. So far it’s been so fun and things are moving so fast that I decided to make a repo for it. 
+
+This could end up being anything.
+
+so far just the one file:
+
+--space.py—
+classes
+  -Ship
+  -Enemy
+  -Bullet
+  -Messages
+  -Hull
+
+def
+  -detectCollisions
+  -wave
+
