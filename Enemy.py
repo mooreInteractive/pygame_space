@@ -74,7 +74,9 @@ class enemy:
     def updateThis(self):
         for h in self.hull:
             h.updateThis(self.x, self.y)
-            if h.isGun:
+            if h.deadtimer == 0:
+                self.hull.remove(h)
+            if h.isGun and h.isAttached:
                 if self.y <= self.yInit + 0.01:
                     h.fire();
                 if self.y >= self.yInit + 49.99:
