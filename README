@@ -7,6 +7,7 @@ I had everyting in one file, but now it is all separated by Classes.
 Main File: Space.py
   -def detectCollisions
   -def wave
+  REQUIRES: pygame
   
 Classes:
   -Ship.py
