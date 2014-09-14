@@ -1,10 +1,12 @@
 #! usr/bin/env python
 import pygame
 import math
+import random
 import Ship
 import Bullet
 import Enemy
 import Messages
+import Bg
 
 pygame.init()
 screen = pygame.display.set_mode((768, 432))
@@ -16,9 +18,8 @@ waveCount = 1
 pygame.time.set_timer(pygame.USEREVENT + 1, 5000)
 block = Ship.ship(bullets)
 messageBox = Messages.messages()
-
-
-
+bg = Bg.bg()
+bg.img = pygame.image.load("bg.png").convert()
 
 def wave():
     global waveCount
@@ -46,10 +47,11 @@ def detectCollisions():
                     #print hullCount
                     hullCount += 1
                     thisHull = pygame.Rect(h.x, h.y, h.w, h.h)
-                    if thisBull.colliderect(thisHull):
+                    if thisBull.colliderect(thisHull) and h.isAttached:
                         bullets.remove(b)
+                        h.isAttached = False
                         #print b
-                        e.hull.remove(h)
+                        #e.hull.remove(h)
                         brokeHull = True
                         #print 'Hull Destroyed!'
                         break
@@ -68,6 +70,7 @@ def detectCollisions():
             if thisBull.colliderect(player):
                 bullets.remove(b)
                 block.hp -= 10
+                #print 'Ship HP: ' + str(block.hp)
                 if block.hp == 0:
                     quit()
 
@@ -82,14 +85,12 @@ def detectCollisions():
                 quit()
                 #Add Game Over Screen?
             enemies.remove(n)
-            print 'Ship HP: ' + str(block.hp)
+            #print 'Ship HP: ' + str(block.hp)
             #print 'Ship color: ' + str(block.color)
 
-
-#Main Game Loop
-while not done:
-        screen.fill((0, 0, 0))
-        for event in pygame.event.get():
+def getUserInput():
+    global done
+    for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 done = True
             #if event.type == pygame.USEREVENT + 1:
@@ -97,26 +98,43 @@ while not done:
                 #print 'wave(derp)'
             if event.type == pygame.KEYDOWN and event.key == pygame.K_s: block.switchSpeed()
             if event.type == pygame.KEYDOWN and event.key == pygame.K_f: block.switchFiringRate()
-        pressed = pygame.key.get_pressed()
-        if len(enemies) == 0:
+
+    pressed = pygame.key.get_pressed()
+    #if pressed[pygame.K_s]: block.switchSpeed()
+    #if pressed[pygame.K_f]: block.switchFiringRate()
+    if pressed[pygame.K_UP]: block.y -= block.speed
+    if pressed[pygame.K_DOWN]: block.y += block.speed
+    if pressed[pygame.K_SPACE]:
+        block.fire()
+    else:
+        block.fireCount = 0
+
+def updateGameObjects():
+    bg.updateThis()
+    if len(enemies) == 0:
             wave()
-        if pressed[pygame.K_UP]: block.y -= block.speed
-        if pressed[pygame.K_DOWN]: block.y += block.speed
-        if pressed[pygame.K_SPACE]:
-            block.fire()
-        else:
-            block.fireCount = 0
-        block.updateThis()
-        block.drawThis(screen)
-        for b in bullets:
-            b.updateThis()
-            b.drawThis(screen)
-        for e in enemies:
-            e.updateThis()
-            e.drawThis(screen)
-        detectCollisions()
-        messageBox.drawText(screen, block) 
-        
-        pygame.display.flip()
-        Clock.tick(60)
+    block.updateThis()
+    for b in bullets:
+        b.updateThis()
+    for e in enemies:
+        e.updateThis()
+    detectCollisions()
+
+def drawScreen():
+    screen.fill((0, 0, 0))
+    bg.drawThis(screen)
+    block.drawThis(screen)
+    for b in bullets:
+        b.drawThis(screen)
+    for e in enemies:
+        e.drawThis(screen)
+    messageBox.drawText(screen, block)
+    pygame.display.flip() 
+
+#Main Game Loop
+while not done:    
+    getUserInput()
+    updateGameObjects()
+    drawScreen()
+    Clock.tick(60)
         
