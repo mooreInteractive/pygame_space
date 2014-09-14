@@ -2,17 +2,31 @@ This is my first time using Python, and I like making games, so I’m also learn
 
 This could end up being anything.
 
-so far just the one file:
+I had everyting in one file, but now it is all separated by Classes.
 
---space.py—
-classes
-  -Ship
-  -Enemy
-  -Bullet
-  -Messages
-  -Hull
+Main File: Space.py
+  -def detectCollisions
+  -def wave
+  
+Classes:
+  -Ship.py
+  -Enemy.py
+  -Bullet.py
+  -Messages.py
+  -Hull.py
 
-def
-  -detectCollisions
-  -wave
 
+Game Controls:
+  -S = Speed Adjust (Currently switched between 2, 4, and 8)
+  -F = Firing Rate Adjust (Currently switched between 2, 4, and 10)
+  -SPACE = Fire ze bullets!
+  
+  
+Features(current):
+  -destructible armor plates on enemies
+  -3 enemy types
+
+Features(planned):
+  -ship hull connection network
+  -player hull
+  -player hull placement
