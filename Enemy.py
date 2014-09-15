@@ -88,7 +88,7 @@ class enemy:
             self.y = (25 * math.sin(self.x * 0.5 * math.pi / 60)) + (25+self.yInit)
         if self.enType == 'fighter':
             self.x -= self.speed
-            self.y = (25 * math.sin(self.x * 0.5 * math.pi / 60)) + (25+self.yInit)
+            self.y = (25 * math.sin(self.x * 0.35 * math.pi / 60)) + (25+self.yInit)
         if self.x < 0-self.w:
             self._enemies.remove(self)
 

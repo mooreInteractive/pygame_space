@@ -37,6 +37,7 @@ def wave():
 def detectCollisions():
     #colliders
     #Bullets hit Enemies
+    global gamestate
     for b in bullets[:]:
         if b.badBullet == False:
             for e in enemies[:]:
@@ -69,12 +70,28 @@ def detectCollisions():
             #Check for Enemy bullets hitting the Player
             thisBull = pygame.Rect(b.x, b.y, b.w, b.h)
             player = pygame.Rect(block.x, block.y, block.w, block.h)
+            phullCount = 0
+            pbrokeHull = False
+            for h in block.hull[:]:
+                #print hullCount
+                phullCount += 1
+                thisHull = pygame.Rect(h.x, h.y, h.w, h.h)
+                if thisBull.colliderect(thisHull) and h.isAttached:
+                    bullets.remove(b)
+                    h.isAttached = False
+                    #print b
+                    #e.hull.remove(h)
+                    pbrokeHull = True
+                    #print 'Hull Destroyed!'
+                    break
+            if pbrokeHull == True:
+                break
             if thisBull.colliderect(player):
                 bullets.remove(b)
                 block.hp -= 10
                 #print 'Ship HP: ' + str(block.hp)
                 if block.hp == 0:
-                    quit()
+                    gamestate = 'menu'
 
 
     #Enemies hit Player(block)
@@ -84,11 +101,16 @@ def detectCollisions():
         if player.colliderect(thisEne):
             block.hp -= 10
             if block.hp == 0:
-                quit()
-                #Add Game Over Screen?
+                gamestate = 'menu'
             enemies.remove(n)
-            #print 'Ship HP: ' + str(block.hp)
-            #print 'Ship color: ' + str(block.color)
+
+def initGame():
+    global gamestate, waveCount, enemies, bullets
+    block.__init__(bullets)
+    waveCount = 1
+    del enemies[:]
+    del bullets[:]
+    gamestate = 'play'
 
 def getUserInput():
     global done
@@ -102,8 +124,6 @@ def getUserInput():
             if event.type == pygame.KEYDOWN and event.key == pygame.K_f: block.switchFiringRate()
 
     pressed = pygame.key.get_pressed()
-    #if pressed[pygame.K_s]: block.switchSpeed()
-    #if pressed[pygame.K_f]: block.switchFiringRate()
     if pressed[pygame.K_UP]: block.y -= block.speed
     if pressed[pygame.K_DOWN]: block.y += block.speed
     if pressed[pygame.K_SPACE]:
@@ -155,7 +175,8 @@ while not done:
             #if event.type == pygame.USEREVENT + 1:
                 #wave()
                 #print 'wave(derp)'
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_s: gamestate = 'play'
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_s: 
+                initGame()
     pygame.display.flip()
     Clock.tick(60)
         

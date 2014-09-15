@@ -1,5 +1,6 @@
 import pygame
 import Bullet
+import Hull
 
 class ship:
     color = (0, 128, 255)
@@ -18,11 +19,31 @@ class ship:
 	
     def __init__(self, bulletsArr):
         self._bullets = bulletsArr;
+        del self.hull[:]
+        self.hull.append(Hull.hull(8, 8, 41, -4, False, 255, self._bullets))
+        self.hull.append(Hull.hull(8, 8, 31, -4, False, 255, self._bullets))
+        self.hull.append(Hull.hull(8, 8, 41, 6, False, 255, self._bullets))
+        self.hull.append(Hull.hull(8, 8, 41, 16, False, 255, self._bullets))
+        self.hull.append(Hull.hull(8, 8, 31, 16, False, 255, self._bullets))
+        self.hull.append(Hull.hull(8, 8, 51, 1, False, 255, self._bullets))
+        self.hull.append(Hull.hull(8, 8, 51, 11, False, 255, self._bullets))
+
+        self.hull.append(Hull.hull(12, 8, 61, 1, True, 255, self._bullets))
+        self.hull.append(Hull.hull(12, 8, 61, 11, True, 255, self._bullets))
+
+        self.ammo = 100
+        self.hp = 100
 
     def drawThis(self, screen):
         pygame.draw.rect(screen, self.color, pygame.Rect(self.x,self.y,self.w,self.h))
+        for h in self.hull:
+            h.drawThis(screen)
 
     def updateThis(self):
+        for h in self.hull:
+            h.updateThis(self.x, self.y)
+            if h.deadtimer == 0:
+                self.hull.remove(h)
         newRed = int(255 - ((self.hp/float(100)) * 255))
         newBlue = int((self.hp/float(100)) * 255)
         self.color = (newRed, 30, newBlue)
@@ -30,12 +51,14 @@ class ship:
         if self.y > (432-self.h): self.y = (432-self.h)
     
     def fire(self):
-        if self.fireCount%(60/self.firingRate) == 0 and self.ammo > 0:
-            b = Bullet.bullet(False, self._bullets)
-            b.x = self.x + self.w + 2
-            b.y = self.y + (self.h/2)
-            self._bullets.insert(0, b)
-            self.ammo -= 1
+        if self.fireCount%(60/self.firingRate) == 0:
+            for h in self.hull:
+                if h.isGun == True and h.isAttached == True and self.ammo > 0:
+                    b = Bullet.bullet(False, self._bullets)
+                    b.x = h.x + h.w + 2
+                    b.y = h.y + (h.h/2)
+                    self._bullets.insert(0, b)
+                    self.ammo -= 1
         
         self.fireCount += 1
         #print self.fireCount

@@ -25,11 +25,15 @@ class hull:
         self.h = h
         self.xmod = xmod
         self.ymod = ymod
-        self.deadx = random.randint(0, 4)
-        self.deady = random.randint(-3, 3)
         self.isGun = gun
         self.grey = grey
         self.color = (self.grey, self.grey, self.grey)
+        if self.grey == 255:
+            self.deadx = random.randint(-4, 0)
+            self.deady = random.randint(-3, 3)
+        else:
+            self.deadx = random.randint(0, 4)
+            self.deady = random.randint(-3, 3)
 
     def updateThis(self, hostx, hosty):
         if self.isAttached:
@@ -51,8 +55,12 @@ class hull:
         
         if self.isAttached:
             pygame.draw.rect(screen, self.color, pygame.Rect(self.x,self.y,self.w,self.h))
-            if self.isGun:
-                pygame.draw.line(screen, self.gunColor, (self.x+(self.h/2), (self.y-1)+(self.h/2)), (self.x-(self.w/2), (self.y-1)+(self.h/2)), 2)
+            if self.isGun:  
+                if self.grey == 255:
+                    pygame.draw.line(screen, self.gunColor, (self.x+(self.w/2), (self.y-1)+(self.h/2)), (self.x+(self.w), (self.y-1)+(self.h/2)), 2)
+                else: 
+                    pygame.draw.line(screen, self.gunColor, (self.x+(self.w/2), (self.y-1)+(self.h/2)), (self.x-(self.w/2), (self.y-1)+(self.h/2)), 2)
+
         else:
             pygame.draw.rect(screen, self.color, pygame.Rect(self.x,self.y,self.w,self.h), self.deadtimer%5)
 
