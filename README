@@ -1,12 +1,14 @@
 This is my first time using Python, and I like making games, so I’m also learning the pygame engine. So far it’s been so fun and things are moving so fast that I decided to make a repo for it. 
 
-This could end up being anything.
-
-I had everyting in one file, but now it is all separated by Classes.
+This could end up being anything. I will start converting to an exe soon with py2exe, or pyinstaller, whichever is easier for rapid prototyping.
 
 Main File: Space.py
   -def detectCollisions
   -def wave
+  -def initGame
+  -def getUserInput
+  -def updateGameObjects
+  -def drawScreen
   REQUIRES: pygame
   
 Classes:
@@ -25,10 +27,10 @@ Game Controls:
   
   
 Features(current):
-  -destructible armor plates on enemies
+  -destructible armor/gun modules
   -3 enemy types
 
 Features(planned):
   -ship hull connection network
-  -player hull
   -player hull placement
+  -boss with lots of armor/guns
