@@ -10,6 +10,8 @@ import Bg
 
 pygame.init()
 screen = pygame.display.set_mode((768, 432))
+#gamestates = 'menu', 'play'
+gamestate = 'menu'
 done = False
 Clock = pygame.time.Clock()
 bullets = [] 
@@ -129,12 +131,31 @@ def drawScreen():
     for e in enemies:
         e.drawThis(screen)
     messageBox.drawText(screen, block)
-    pygame.display.flip() 
 
 #Main Game Loop
-while not done:    
-    getUserInput()
-    updateGameObjects()
-    drawScreen()
+while not done:
+    if gamestate == 'play':
+        getUserInput()
+        updateGameObjects()
+        drawScreen()
+    if gamestate == 'menu':
+        screen.fill((0, 0, 0))
+        bg.drawThis(screen)
+        playText = 'Press \'S\' to play.'
+        basicfont = pygame.font.SysFont(None, 22)
+        playLabel = basicfont.render(playText, True, (255, 255, 255), (0, 0, 0))
+        playRect = playLabel.get_rect()
+        playRect.x = 100
+        playRect.y = 200
+        screen.blit(playLabel, playRect)
+        
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                done = True
+            #if event.type == pygame.USEREVENT + 1:
+                #wave()
+                #print 'wave(derp)'
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_s: gamestate = 'play'
+    pygame.display.flip()
     Clock.tick(60)
         
