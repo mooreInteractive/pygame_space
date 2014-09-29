@@ -15,21 +15,25 @@ class ship:
     ammo = 100
     hp = 100
     hull = []
+    invetory = [['hull',8,8,100,100],['hull',8,8,100,100],['gun',12,8,100,100]]
     _bullets = []
 	
     def __init__(self, bulletsArr):
         self._bullets = bulletsArr;
-        del self.hull[:]
-        self.hull.append(Hull.hull(8, 8, 41, -4, False, 255, self._bullets))
-        self.hull.append(Hull.hull(8, 8, 31, -4, False, 255, self._bullets))
-        self.hull.append(Hull.hull(8, 8, 41, 6, False, 255, self._bullets))
-        self.hull.append(Hull.hull(8, 8, 41, 16, False, 255, self._bullets))
-        self.hull.append(Hull.hull(8, 8, 31, 16, False, 255, self._bullets))
-        self.hull.append(Hull.hull(8, 8, 51, 1, False, 255, self._bullets))
-        self.hull.append(Hull.hull(8, 8, 51, 11, False, 255, self._bullets))
+        self.x = 30;
+        self.y = 30;
 
-        self.hull.append(Hull.hull(12, 8, 61, 1, True, 255, self._bullets))
-        self.hull.append(Hull.hull(12, 8, 61, 11, True, 255, self._bullets))
+        del self.hull[:]
+        #self.hull.append(Hull.hull(8, 8, 41, -4, False, 255, self._bullets))
+        #self.hull.append(Hull.hull(8, 8, 31, -4, False, 255, self._bullets))
+        #self.hull.append(Hull.hull(8, 8, 41, 6, False, 255, self._bullets))
+        #self.hull.append(Hull.hull(8, 8, 41, 16, False, 255, self._bullets))
+        #self.hull.append(Hull.hull(8, 8, 31, 16, False, 255, self._bullets))
+        #self.hull.append(Hull.hull(8, 8, 51, 1, False, 255, self._bullets))
+        #self.hull.append(Hull.hull(8, 8, 51, 11, False, 255, self._bullets))
+
+        #self.hull.append(Hull.hull(12, 8, 61, 1, True, 255, self._bullets))
+        #self.hull.append(Hull.hull(12, 8, 61, 11, True, 255, self._bullets))
 
         self.ammo = 100
         self.hp = 100

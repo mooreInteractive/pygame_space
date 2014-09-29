@@ -7,11 +7,13 @@ import Bullet
 import Enemy
 import Messages
 import Bg
+import Menu
 
 pygame.init()
 screen = pygame.display.set_mode((768, 432))
 #gamestates = 'menu', 'play'
 gamestate = 'menu'
+mainMenu = Menu.mainMenu();
 done = False
 Clock = pygame.time.Clock()
 bullets = [] 
@@ -159,24 +161,12 @@ while not done:
         updateGameObjects()
         drawScreen()
     if gamestate == 'menu':
-        screen.fill((0, 0, 0))
-        bg.drawThis(screen)
-        playText = 'Press \'S\' to play.'
-        basicfont = pygame.font.SysFont(None, 22)
-        playLabel = basicfont.render(playText, True, (255, 255, 255), (0, 0, 0))
-        playRect = playLabel.get_rect()
-        playRect.x = 100
-        playRect.y = 200
-        screen.blit(playLabel, playRect)
-        
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                done = True
-            #if event.type == pygame.USEREVENT + 1:
-                #wave()
-                #print 'wave(derp)'
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_s: 
-                initGame()
+        events = pygame.event.get()
+        mainMenu.getUserInput(initGame, done, events)
+        mainMenu.updateMenuScreen(block)
+        mainMenu.drawMenuScreen(bg, screen, block)
+        if mainMenu.endProgram == True:
+            done = True
     pygame.display.flip()
     Clock.tick(60)
         
