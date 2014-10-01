@@ -64,8 +64,8 @@ class mainMenu:
             if event.type == pygame.MOUSEBUTTONUP:
                 if self.dragging:
                     if self.gridRect.collidepoint(self.mousePos):
-                        self.draggedItem[4].x = self.mousePos[0] - (self.draggedItem[1]/2)
-                        self.draggedItem[4].y = self.mousePos[1] - (self.draggedItem[2]/2)
+                        self.draggedItem[4].x = math.floor((self.mousePos[0] - (self.draggedItem[1]/2)) + 0.5)
+                        self.draggedItem[4].y = math.floor((self.mousePos[1] - (self.draggedItem[2]/2))+ 0.5)
                         self.equippedInv.insert(0, self.draggedItem)
                     else:
                         inInv = False
@@ -76,13 +76,13 @@ class mainMenu:
                         if inInv == False:
                             self.draggedItem[3] = 1
                             self.playerInv.insert(0, self.draggedItem)
-                print 'place hull p:'+str(len(self.playerInv))+', e:'+str(len(self.equippedInv))
-                print 'draggedItem = '+str(self.draggedItem)
+                #print 'place hull p:'+str(len(self.playerInv))+', e:'+str(len(self.equippedInv))
+                #print 'draggedItem = '+str(self.draggedItem)
                 self.draggedItem = []
                 self.dragging = False
             if event.type == pygame.MOUSEBUTTONDOWN:
                 for _inv in self.playerInv:
-                    if _inv[4].collidepoint(pygame.mouse.get_pos()):
+                    if _inv[4].collidepoint(self.mousePos):
                         self.dragging = True
                         if _inv[3] > 1:
                             copyInv = list(_inv)
@@ -92,6 +92,11 @@ class mainMenu:
                         else:
                             self.draggedItem = _inv
                             self.playerInv.remove(_inv)
+                for _eqp in self.equippedInv:
+                    if pygame.Rect(_eqp[4].x, _eqp[4].y, _eqp[1], _eqp[2]).collidepoint(self.mousePos):
+                        self.dragging = True
+                        self.draggedItem = _eqp
+                        self.equippedInv.remove(_eqp)
 
             #if event.type == pygame.USEREVENT + 1:
                 #wave()
@@ -129,6 +134,10 @@ class mainMenu:
             drugX = self.mousePos[0] - (self.draggedItem[1]/2)
             drugY = self.mousePos[1] - (self.draggedItem[2]/2)
             pygame.draw.rect(screen, (255,255,255), pygame.Rect(drugX, drugY, self.draggedItem[1], self.draggedItem[2]))
+            if self.draggedItem[0] == 'gun':
+            	start = (drugX + (self.draggedItem[1]/2), drugY + (self.draggedItem[2]/2))
+            	end = (drugX + (self.draggedItem[1]*1.5), drugY + (self.draggedItem[2]/2))
+                pygame.draw.line(screen, (255,50,50), start,end)
 
         itemsCount = 0
         for item in self.playerInv:
@@ -157,3 +166,7 @@ class mainMenu:
 
         for hull in self.equippedInv:
             pygame.draw.rect(screen, (255,255,255), pygame.Rect(hull[4].x, hull[4].y, hull[1], hull[2]))
+            if hull[0] == 'gun':
+            	start = (hull[4].x + (hull[1]/2), hull[4].y + (hull[2]/2))
+            	end = (hull[4].x + (hull[1]*1.5), hull[4].y + (hull[2]/2))
+                pygame.draw.line(screen, (255,50,50), start,end)

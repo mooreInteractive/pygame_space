@@ -18,12 +18,18 @@ class ship:
     inventory = [['hull',8,8,100,100],['hull',8,8,100,100],['gun',12,8,100,100]]
     _bullets = []
 	
-    def __init__(self, bulletsArr):
+    def __init__(self, bulletsArr, equipment):
         self._bullets = bulletsArr;
-        self.x = 30;
-        self.y = 30;
 
         del self.hull[:]
+        
+        for eqp in equipment:
+            isgun = False
+            if eqp[0] == 'gun':
+                isgun = True
+            
+            self.hull.append(Hull.hull(eqp[1],eqp[2],(eqp[4].x - self.x),(eqp[4].y - self.y), isgun, 255, self._bullets))
+        
         #self.hull.append(Hull.hull(8, 8, 41, -4, False, 255, self._bullets))
         #self.hull.append(Hull.hull(8, 8, 31, -4, False, 255, self._bullets))
         #self.hull.append(Hull.hull(8, 8, 41, 6, False, 255, self._bullets))
@@ -35,6 +41,9 @@ class ship:
         #self.hull.append(Hull.hull(12, 8, 61, 1, True, 255, self._bullets))
         #self.hull.append(Hull.hull(12, 8, 61, 11, True, 255, self._bullets))
 
+        self.x = 30;
+        self.y = 30;
+        
         self.ammo = 100
         self.hp = 100
 

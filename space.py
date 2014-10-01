@@ -19,7 +19,7 @@ bullets = []
 enemies = []
 waveCount = 1
 pygame.time.set_timer(pygame.USEREVENT + 1, 5000)
-block = Ship.ship(bullets)
+block = Ship.ship(bullets, list([]))
 mainMenu = Menu.mainMenu(block);
 messageBox = Messages.messages()
 bg = Bg.bg()
@@ -94,6 +94,8 @@ def detectCollisions():
                 #print 'Ship HP: ' + str(block.hp)
                 if block.hp == 0:
                     gamestate = 'menu'
+                    block.hp = 100
+                    block.color = (0, 128, 255)
 
 
     #Enemies hit Player(block)
@@ -107,8 +109,8 @@ def detectCollisions():
             enemies.remove(n)
 
 def initGame():
-    global gamestate, waveCount, enemies, bullets
-    block.__init__(bullets)
+    global gamestate, waveCount, enemies, bullets, mainMenu
+    block.__init__(bullets, mainMenu.equippedInv)
     waveCount = 1
     del enemies[:]
     del bullets[:]
