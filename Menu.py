@@ -5,6 +5,11 @@ class mainMenu:
 
     endProgram = False
     startGame = False
+    gridRect = pygame.Rect(452,116, 200, 200)
+    mousePos = (0,0)
+    playerInv = []
+    dragging = False
+    draggedItem = []
 
     playText = 'Press \'S\' to play.'
     titleText = 'Pygame_Space'
@@ -33,11 +38,39 @@ class mainMenu:
     configRect.x = 452
     configRect.y = 95
 
-    #def __init__(self):
+    def __init__(self, player):
+        newinv = []
+        for item in player.inventory:
+            if len(newinv) == 0:
+                newinv.insert(0,[item[0],item[1],item[2], 1, pygame.Rect(0,0,50,50)])
+            else:
+                isdupe = False
+                for _item in newinv:
+                    if item[0] == _item[0]:
+                        _item[3] += 1
+                        isdupe = True
+                if isdupe == False:
+                    newinv.insert(0,[item[0],item[1],item[2], 1, pygame.Rect(0,0,50,50)])
+
+        self.playerInv = newinv
     def getUserInput(self, initGame, done, events):
         for event in events:
             if event.type == pygame.QUIT:
                 self.endProgram = True
+            if event.type == pygame.MOUSEBUTTONUP:
+                self.dragging = False
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                for _inv in list(self.playerInv):
+                    if _inv[4].collidepoint(pygame.mouse.get_pos()):
+                        print 'clicked an item'
+                        self.dragging = True
+                        self.draggedItem = _inv
+                        if _inv[3] > 1:
+                            _inv[3] -= 1
+                        else:
+                            self.playerInv.remove(_inv)
+            if event.type == pygame.MOUSEMOTION:
+                self.mousePos = pygame.mouse.get_pos()
             #if event.type == pygame.USEREVENT + 1:
                 #wave()
                 #print 'wave(derp)'
@@ -61,17 +94,18 @@ class mainMenu:
         screen.blit(self.configLabel, self.configRect)
 
         #Ship grid
-        pygame.draw.rect(screen, (50,50,50), pygame.Rect(452,116, 200, 200))
-        pygame.draw.rect(screen, (180,235,255), pygame.Rect(452,116, 200, 200), 1)
+        pygame.draw.rect(screen, (50,50,50), self.gridRect)
+        pygame.draw.rect(screen, (180,235,255), self.gridRect, 1)
 
         #Inventory List
         pygame.draw.rect(screen, (15,15,15), pygame.Rect(80,116, 350, 200))
         pygame.draw.rect(screen, (180,235,255), pygame.Rect(80,116, 350, 200), 1)
 
         itemsCount = 0
-        for item in block.invetory:
-
-            pygame.draw.rect(screen, (235,235,255), pygame.Rect(90 + ((itemsCount%5)*70),136 + (math.floor(itemsCount/5)*70), 50, 50), 1)
+        for item in self.playerInv:
+            item[4].x = 90 + ((itemsCount%5)*70)
+            item[4].y = 136 + (math.floor(itemsCount/5)*70)
+            pygame.draw.rect(screen, (235,235,255), item[4], 1)
 
             modelW = item[1]
             modelH = item[2]
@@ -80,11 +114,13 @@ class mainMenu:
             	start = (105 + ((itemsCount%5)*70) + (modelW-4),151 + ((math.floor(itemsCount/5))*70) + (modelH/2))
             	end = (105 + ((itemsCount%5)*70) + (modelW+4), 151 + ((math.floor(itemsCount/5))*70) + (modelH/2))
                 pygame.draw.line(screen, (255,50,50), start,end)
-
-            invText = item[0]
+            if item[3] > 1:
+                invText = item[0] + ' x' + str(item[3])
+            else:
+                invText = item[0]
             invLabel = self.smallfont.render(invText, True, (255, 255, 255), (0, 0, 0))
             invRect = invLabel.get_rect()
-    	    invRect.x = 105 + ((itemsCount%5)*70)
+    	    invRect.x = 95 + ((itemsCount%5)*70)
             invRect.y = 170 + (math.floor(itemsCount/5))*70
             screen.blit(invLabel, invRect) 
             itemsCount += 1

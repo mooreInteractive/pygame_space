@@ -15,7 +15,7 @@ class ship:
     ammo = 100
     hp = 100
     hull = []
-    invetory = [['hull',8,8,100,100],['hull',8,8,100,100],['gun',12,8,100,100]]
+    inventory = [['hull',8,8,100,100],['hull',8,8,100,100],['gun',12,8,100,100]]
     _bullets = []
 	
     def __init__(self, bulletsArr):

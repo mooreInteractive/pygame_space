@@ -13,7 +13,6 @@ pygame.init()
 screen = pygame.display.set_mode((768, 432))
 #gamestates = 'menu', 'play'
 gamestate = 'menu'
-mainMenu = Menu.mainMenu();
 done = False
 Clock = pygame.time.Clock()
 bullets = [] 
@@ -21,6 +20,7 @@ enemies = []
 waveCount = 1
 pygame.time.set_timer(pygame.USEREVENT + 1, 5000)
 block = Ship.ship(bullets)
+mainMenu = Menu.mainMenu(block);
 messageBox = Messages.messages()
 bg = Bg.bg()
 bg.img = pygame.image.load("bg.png").convert()
