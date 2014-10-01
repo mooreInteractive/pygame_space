@@ -8,6 +8,7 @@ class mainMenu:
     gridRect = pygame.Rect(452,116, 200, 200)
     mousePos = (0,0)
     playerInv = []
+    equippedInv = []
     dragging = False
     draggedItem = []
 
@@ -57,20 +58,41 @@ class mainMenu:
         for event in events:
             if event.type == pygame.QUIT:
                 self.endProgram = True
-            if event.type == pygame.MOUSEBUTTONUP:
-                self.dragging = False
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                for _inv in list(self.playerInv):
-                    if _inv[4].collidepoint(pygame.mouse.get_pos()):
-                        print 'clicked an item'
-                        self.dragging = True
-                        self.draggedItem = _inv
-                        if _inv[3] > 1:
-                            _inv[3] -= 1
-                        else:
-                            self.playerInv.remove(_inv)
+
             if event.type == pygame.MOUSEMOTION:
                 self.mousePos = pygame.mouse.get_pos()
+            if event.type == pygame.MOUSEBUTTONUP:
+                if self.dragging:
+                    if self.gridRect.collidepoint(self.mousePos):
+                        self.draggedItem[4].x = self.mousePos[0] - (self.draggedItem[1]/2)
+                        self.draggedItem[4].y = self.mousePos[1] - (self.draggedItem[2]/2)
+                        self.equippedInv.insert(0, self.draggedItem)
+                    else:
+                        inInv = False
+                        for _inv in self.playerInv:
+                            if _inv[0] == self.draggedItem[0]:
+                                _inv[3] += 1
+                                inInv = True
+                        if inInv == False:
+                            self.draggedItem[3] = 1
+                            self.playerInv.insert(0, self.draggedItem)
+                print 'place hull p:'+str(len(self.playerInv))+', e:'+str(len(self.equippedInv))
+                print 'draggedItem = '+str(self.draggedItem)
+                self.draggedItem = []
+                self.dragging = False
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                for _inv in self.playerInv:
+                    if _inv[4].collidepoint(pygame.mouse.get_pos()):
+                        self.dragging = True
+                        if _inv[3] > 1:
+                            copyInv = list(_inv)
+                            copyInv[4] = pygame.Rect(0,0,50,50)
+                            self.draggedItem = list(copyInv)
+                            _inv[3] -= 1
+                        else:
+                            self.draggedItem = _inv
+                            self.playerInv.remove(_inv)
+
             #if event.type == pygame.USEREVENT + 1:
                 #wave()
                 #print 'wave(derp)'
@@ -97,14 +119,22 @@ class mainMenu:
         pygame.draw.rect(screen, (50,50,50), self.gridRect)
         pygame.draw.rect(screen, (180,235,255), self.gridRect, 1)
 
+        block.drawThis(screen)
+
         #Inventory List
         pygame.draw.rect(screen, (15,15,15), pygame.Rect(80,116, 350, 200))
         pygame.draw.rect(screen, (180,235,255), pygame.Rect(80,116, 350, 200), 1)
+
+        if self.dragging:
+            drugX = self.mousePos[0] - (self.draggedItem[1]/2)
+            drugY = self.mousePos[1] - (self.draggedItem[2]/2)
+            pygame.draw.rect(screen, (255,255,255), pygame.Rect(drugX, drugY, self.draggedItem[1], self.draggedItem[2]))
 
         itemsCount = 0
         for item in self.playerInv:
             item[4].x = 90 + ((itemsCount%5)*70)
             item[4].y = 136 + (math.floor(itemsCount/5)*70)
+            item[4].w = item[4].h = 50
             pygame.draw.rect(screen, (235,235,255), item[4], 1)
 
             modelW = item[1]
@@ -125,13 +155,5 @@ class mainMenu:
             screen.blit(invLabel, invRect) 
             itemsCount += 1
 
-        block.drawThis(screen)
-
-
-
-
-
-
-
-        
-        
+        for hull in self.equippedInv:
+            pygame.draw.rect(screen, (255,255,255), pygame.Rect(hull[4].x, hull[4].y, hull[1], hull[2]))
