@@ -8,6 +8,7 @@ import Enemy
 import Messages
 import Bg
 import Menu
+import Loot
 
 pygame.init()
 screen = pygame.display.set_mode((768, 432))
@@ -17,6 +18,7 @@ done = False
 Clock = pygame.time.Clock()
 bullets = [] 
 enemies = []
+loot = []
 waveCount = 1
 pygame.time.set_timer(pygame.USEREVENT + 1, 5000)
 block = Ship.ship(bullets, list([]))
@@ -66,6 +68,7 @@ def detectCollisions():
                     block.ammo += e.payout
                     enemies.remove(e)
                     bullets.remove(b)
+                    print 'Drop Loot'
                     #print 'Enemy destroyed!'
                     break
         else:
@@ -107,6 +110,13 @@ def detectCollisions():
             if block.hp == 0:
                 gamestate = 'menu'
             enemies.remove(n)
+            
+    #Loot hit Player(block)
+    for l in loot[:]:
+        player = pygame.Rect(block.x, block.y, block.w, block.h)
+        if player.colliderect(l.rect):
+            mainMenu.playerInv.insert(0, l.inv)
+            loot.remove(l)
 
 def initGame():
     global gamestate, waveCount, enemies, bullets, mainMenu
@@ -144,6 +154,8 @@ def updateGameObjects():
         b.updateThis()
     for e in enemies:
         e.updateThis()
+    for l in loot:
+        l.updateThis()
     detectCollisions()
 
 def drawScreen():
@@ -154,6 +166,8 @@ def drawScreen():
         b.drawThis(screen)
     for e in enemies:
         e.drawThis(screen)
+    for l in loot:
+        l.drawThis(screen)
     messageBox.drawText(screen, block)
 
 #Main Game Loop
