@@ -38,6 +38,22 @@ def wave():
             g = Enemy.enemy('fighter', random.randint(4, 5), bullets, enemies)
     waveCount += 1
 
+def dropLoot(x,y):
+    rando = random.randint(1,6)
+    if rando == 1:
+        drop = Loot.loot('hull',pygame.Rect(x, y, 8, 18))
+        loot.insert(0, drop)
+    if rando == 2:
+        drop = Loot.loot('hull',pygame.Rect(x, y, 18, 8))
+        loot.insert(0, drop)
+    if rando == 3:
+        drop = Loot.loot('gun',pygame.Rect(x, y, 12, 8))
+        loot.insert(0, drop)
+    if rando > 3: 
+        print 'destroyed Enemy, but nothing was salvagable'
+        drop = Loot.loot('gun',pygame.Rect(x, y, 12, 8))
+        loot.insert(0, drop)
+
 def detectCollisions():
     #colliders
     #Bullets hit Enemies
@@ -66,10 +82,9 @@ def detectCollisions():
                     break
                 if thisBull.colliderect(thisEn):
                     block.ammo += e.payout
+                    dropLoot(e.x+(e.w/2), e.y+(e.h/2))
                     enemies.remove(e)
                     bullets.remove(b)
-                    print 'Drop Loot'
-                    #print 'Enemy destroyed!'
                     break
         else:
             #Check for Enemy bullets hitting the Player
@@ -156,6 +171,8 @@ def updateGameObjects():
         e.updateThis()
     for l in loot:
         l.updateThis()
+        if l.rect.x < (0-l.rect.w):
+            loot.remove(l)
     detectCollisions()
 
 def drawScreen():

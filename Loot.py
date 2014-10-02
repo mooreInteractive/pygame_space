@@ -3,23 +3,18 @@ import math
 
 class loot:
     type = 'hull'
-    x = 0
-    y = 0
-    w = 8
-    h = 8
-    rect = pygame.Rect(x, y, w, h)
+    rect = pygame.Rect(0,0,1,1)
+    color = (24, 215, 56)
     speed = 1
     inv = ['hull',8,8,1,pygame.Rect(0,0,50,50)]
     
-    def __init__(self, type, x, y):
+    def __init__(self, type, hullRect):
         self.type = type
-        self.x = x
-        self.y = y
-        self.rect.x = x
-        self.rect.y = y
+        self.rect = hullRect
+
     
     def updateThis(self):
-        self.x -= self.speed
+        self.rect.x -= self.speed
         
     def drawThis(self, screen):
         pygame.draw.rect(screen, self.color, self.rect)
