@@ -50,7 +50,6 @@ def dropLoot(x,y):
         drop = Loot.loot('gun',pygame.Rect(x, y, 12, 8))
         loot.insert(0, drop)
     if rando > 3: 
-        print 'destroyed Enemy, but nothing was salvagable'
         drop = Loot.loot('gun',pygame.Rect(x, y, 12, 8))
         loot.insert(0, drop)
 
@@ -111,9 +110,10 @@ def detectCollisions():
                 block.hp -= 10
                 #print 'Ship HP: ' + str(block.hp)
                 if block.hp == 0:
-                    gamestate = 'menu'
                     block.hp = 100
                     block.color = (0, 128, 255)
+                    mainMenu.__init__(block)
+                    gamestate = 'menu'
 
 
     #Enemies hit Player(block)
@@ -130,7 +130,7 @@ def detectCollisions():
     for l in loot[:]:
         player = pygame.Rect(block.x, block.y, block.w, block.h)
         if player.colliderect(l.rect):
-            mainMenu.playerInv.insert(0, l.inv)
+            block.inventory.insert(0, l.inv)
             loot.remove(l)
 
 def initGame():

@@ -41,13 +41,15 @@ class mainMenu:
 
     def __init__(self, player):
         newinv = []
+        del self.equippedInv[:]
+        del player.hull[:]
         for item in player.inventory:
             if len(newinv) == 0:
                 newinv.insert(0,[item[0],item[1],item[2], 1, pygame.Rect(0,0,50,50)])
             else:
                 isdupe = False
                 for _item in newinv:
-                    if item[0] == _item[0]:
+                    if item[0] == _item[0] and item[1] == _item[1] and item[2] == _item[2]:
                         _item[3] += 1
                         isdupe = True
                 if isdupe == False:
@@ -76,8 +78,6 @@ class mainMenu:
                         if inInv == False:
                             self.draggedItem[3] = 1
                             self.playerInv.insert(0, self.draggedItem)
-                #print 'place hull p:'+str(len(self.playerInv))+', e:'+str(len(self.equippedInv))
-                #print 'draggedItem = '+str(self.draggedItem)
                 self.draggedItem = []
                 self.dragging = False
             if event.type == pygame.MOUSEBUTTONDOWN:
@@ -98,9 +98,6 @@ class mainMenu:
                         self.draggedItem = _eqp
                         self.equippedInv.remove(_eqp)
 
-            #if event.type == pygame.USEREVENT + 1:
-                #wave()
-                #print 'wave(derp)'
             if event.type == pygame.KEYDOWN and event.key == pygame.K_s:
                 initGame()
                 self.startGame = True

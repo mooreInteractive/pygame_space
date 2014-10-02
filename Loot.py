@@ -11,6 +11,9 @@ class loot:
     def __init__(self, type, hullRect):
         self.type = type
         self.rect = hullRect
+        self.inv[1] = hullRect.w
+        self.inv[2] = hullRect.h
+        self.inv[0] = type
 
     
     def updateThis(self):
