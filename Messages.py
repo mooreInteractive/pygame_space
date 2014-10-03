@@ -29,7 +29,7 @@ class messages:
     def drawText(self, screen, ship):
         self.speedText = 'Speed: ' + str(ship.speed)
         self.rateText = 'Fire Rate: ' + str(ship.firingRate)
-        self.ammoText = 'Ammo: ' + str(ship.ammo)
+        self.ammoText = 'Energy: ' + str(int(ship.energy))
         
         self.speedLabel = self.basicfont.render(self.speedText, True, (255, 255, 255), (0, 0, 0))
         self.rateLabel = self.basicfont.render(self.rateText, True, (255, 255, 255), (0, 0, 0))

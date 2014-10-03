@@ -19,6 +19,7 @@ Clock = pygame.time.Clock()
 bullets = [] 
 enemies = []
 loot = []
+playCount = 0
 waveCount = 1
 pygame.time.set_timer(pygame.USEREVENT + 1, 5000)
 block = Ship.ship(bullets, list([]))
@@ -39,19 +40,38 @@ def wave():
     waveCount += 1
 
 def dropLoot(x,y):
-    rando = random.randint(1,6)
-    if rando == 1:
-        drop = Loot.loot('hull',pygame.Rect(x, y, 8, 18))
-        loot.insert(0, drop)
-    if rando == 2:
-        drop = Loot.loot('hull',pygame.Rect(x, y, 18, 8))
-        loot.insert(0, drop)
-    if rando == 3:
-        drop = Loot.loot('gun',pygame.Rect(x, y, 12, 8))
-        loot.insert(0, drop)
-    if rando > 3: 
-        drop = Loot.loot('gun',pygame.Rect(x, y, 12, 8))
-        loot.insert(0, drop)
+    global playCount
+    if playCount > 1:
+        randoBool = random.randint(1,2)
+        rando = random.randint(1,6)
+        if randoBool == 2:
+            if rando == 1:
+                drop = Loot.loot('hull',pygame.Rect(x, y, 8, 18))
+                loot.insert(0, drop)
+            if rando == 2:
+                drop = Loot.loot('hull',pygame.Rect(x, y, 18, 8))
+                loot.insert(0, drop)
+            if rando == 3:
+                drop = Loot.loot('gun',pygame.Rect(x, y, 12, 8))
+                loot.insert(0, drop)
+            if rando > 3: 
+                drop = Loot.loot('hull',pygame.Rect(x, y, 8, 8))
+                loot.insert(0, drop)
+    else:
+        rando = random.randint(1,6)
+        if rando == 1:
+            drop = Loot.loot('hull',pygame.Rect(x, y, 8, 18))
+            loot.insert(0, drop)
+        if rando == 2:
+            drop = Loot.loot('hull',pygame.Rect(x, y, 18, 8))
+            loot.insert(0, drop)
+        if rando == 3:
+            drop = Loot.loot('hull',pygame.Rect(x, y, 8, 8))
+            loot.insert(0, drop)
+        if rando > 3: 
+            drop = Loot.loot('gun',pygame.Rect(x, y, 12, 8))
+            loot.insert(0, drop)
+
 
 def detectCollisions():
     #colliders
@@ -80,7 +100,7 @@ def detectCollisions():
                 if brokeHull == True:
                     break
                 if thisBull.colliderect(thisEn):
-                    block.ammo += e.payout
+                    #block.energy += e.payout
                     dropLoot(e.x+(e.w/2), e.y+(e.h/2))
                     enemies.remove(e)
                     bullets.remove(b)
@@ -98,10 +118,8 @@ def detectCollisions():
                 if thisBull.colliderect(thisHull) and h.isAttached:
                     bullets.remove(b)
                     h.isAttached = False
-                    #print b
-                    #e.hull.remove(h)
                     pbrokeHull = True
-                    #print 'Hull Destroyed!'
+                    removeFromPlayerInventory(h)
                     break
             if pbrokeHull == True:
                 break
@@ -123,6 +141,9 @@ def detectCollisions():
         if player.colliderect(thisEne):
             block.hp -= 10
             if block.hp == 0:
+                block.hp = 100
+                block.color = (0, 128, 255)
+                mainMenu.__init__(block)
                 gamestate = 'menu'
             enemies.remove(n)
             
@@ -134,27 +155,42 @@ def detectCollisions():
             loot.remove(l)
 
 def initGame():
-    global gamestate, waveCount, enemies, bullets, mainMenu
+    global gamestate, waveCount, enemies, bullets, mainMenu, playCount
     block.__init__(bullets, mainMenu.equippedInv)
     waveCount = 1
     del enemies[:]
     del bullets[:]
+    playCount += 1
     gamestate = 'play'
 
+def removeFromPlayerInventory(inv):
+    for i in block.inventory:
+        if i[1] == inv.w and i[2] == inv.h:
+            if i[0] == 'hull' and inv.isGun == False:
+                block.inventory.remove(i)
+                print 'inv len = '+str(len(block.inventory))
+                return
+            if i[0] == 'gun' and inv.isGun == True:
+                block.inventory.remove(i)
+                print 'inv len = '+str(len(block.inventory))
+                return
 def getUserInput():
     global done
     for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 done = True
-            #if event.type == pygame.USEREVENT + 1:
-                #wave()
-                #print 'wave(derp)'
             if event.type == pygame.KEYDOWN and event.key == pygame.K_s: block.switchSpeed()
             if event.type == pygame.KEYDOWN and event.key == pygame.K_f: block.switchFiringRate()
 
     pressed = pygame.key.get_pressed()
-    if pressed[pygame.K_UP]: block.y -= block.speed
-    if pressed[pygame.K_DOWN]: block.y += block.speed
+    if pressed[pygame.K_UP]:
+        if block.energy > 0:
+            block.y -= block.speed
+            block.energy -= block.speed/4
+    if pressed[pygame.K_DOWN]:
+        if block.energy > 0: 
+            block.y += block.speed
+            block.energy -= block.speed/4
     if pressed[pygame.K_SPACE]:
         block.fire()
     else:

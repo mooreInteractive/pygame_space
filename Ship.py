@@ -12,7 +12,8 @@ class ship:
     firingRate = 2
     fireCount = 0
     firing = False
-    ammo = 100
+    energy = 100
+    rechargeRate = 0.2
     hp = 100
     hull = []
     inventory = [['hull',8,8,100,100],['hull',8,8,100,100],['gun',12,8,100,100]]
@@ -29,22 +30,11 @@ class ship:
                 isgun = True
             
             self.hull.append(Hull.hull(eqp[1],eqp[2],(eqp[4].x - self.x),(eqp[4].y - self.y), isgun, 255, self._bullets))
-        
-        #self.hull.append(Hull.hull(8, 8, 41, -4, False, 255, self._bullets))
-        #self.hull.append(Hull.hull(8, 8, 31, -4, False, 255, self._bullets))
-        #self.hull.append(Hull.hull(8, 8, 41, 6, False, 255, self._bullets))
-        #self.hull.append(Hull.hull(8, 8, 41, 16, False, 255, self._bullets))
-        #self.hull.append(Hull.hull(8, 8, 31, 16, False, 255, self._bullets))
-        #self.hull.append(Hull.hull(8, 8, 51, 1, False, 255, self._bullets))
-        #self.hull.append(Hull.hull(8, 8, 51, 11, False, 255, self._bullets))
-
-        #self.hull.append(Hull.hull(12, 8, 61, 1, True, 255, self._bullets))
-        #self.hull.append(Hull.hull(12, 8, 61, 11, True, 255, self._bullets))
 
         self.x = 30;
         self.y = 30;
         
-        self.ammo = 100
+        self.energy = 100
         self.hp = 100
 
     def drawThis(self, screen):
@@ -62,16 +52,19 @@ class ship:
         self.color = (newRed, 30, newBlue)
         if self.y < 0: self.y = 0;
         if self.y > (432-self.h): self.y = (432-self.h)
+        self.energy += self.rechargeRate
+        if self.energy > 100:
+            self.energy = 100
     
     def fire(self):
         if self.fireCount%(60/self.firingRate) == 0:
             for h in self.hull:
-                if h.isGun == True and h.isAttached == True and self.ammo > 0:
+                if h.isGun == True and h.isAttached == True and self.energy > 0:
                     b = Bullet.bullet(False, self._bullets)
                     b.x = h.x + h.w + 2
                     b.y = h.y + (h.h/2)
                     self._bullets.insert(0, b)
-                    self.ammo -= 1
+                    self.energy -= 1
         
         self.fireCount += 1
         #print self.fireCount
