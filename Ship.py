@@ -16,7 +16,7 @@ class ship:
     rechargeRate = 0.2
     hp = 100
     hull = []
-    inventory = [['hull',8,8,100,100],['hull',8,8,100,100],['gun',12,8,100,100]]
+    inventory = [['hull',8,8,1,pygame.Rect(0,0,50,50)],['hull',8,8,1,pygame.Rect(0,0,50,50)],['gun',12,8,1,pygame.Rect(0,0,50,50)]]
     _bullets = []
 	
     def __init__(self, bulletsArr, equipment):
