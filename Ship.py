@@ -14,6 +14,11 @@ class ship:
     firing = False
     energy = 100
     rechargeRate = 0.1
+    energyMax = 100
+    defaultEnergy = 100
+    defaultRechargeRate = 0.1
+    defaultHP = 100
+    hpMax = 100
     hp = 100
     hull = []
     inventory = [['hull',8,8,1,pygame.Rect(0,0,50,50)],['hull',8,8,1,pygame.Rect(0,0,50,50)],['gun',12,8,1,pygame.Rect(0,0,50,50)]]
@@ -31,6 +36,8 @@ class ship:
             
             self.hull.append(Hull.hull(eqp[1],eqp[2],(eqp[4].x - self.x),(eqp[4].y - self.y), isgun, 255, self._bullets))
 
+        self.updateStats()
+
         self.x = 30;
         self.y = 30;
         
@@ -41,6 +48,24 @@ class ship:
         pygame.draw.rect(screen, self.color, pygame.Rect(self.x,self.y,self.w,self.h))
         for h in self.hull:
             h.drawThis(screen)
+
+    def updateStats(self):
+        #update Stats for each item equipped's value
+        newRR = self.defaultRechargeRate
+        newEC = self.defaultEnergy
+        newHP = self.defaultHP
+        for h in self.hull:
+            if h.isGun == False and h.isAttached == True:
+                if h.w == 8 and h.h == 18:
+                    newRR += 0.1
+                if h.w == 18 and h.h == 18:
+                    newEC += 10
+                if h.w == 18 and h.h == 8:
+                    newHP += 10
+        self.rechargeRate = newRR
+        self.energyMax = newEC
+        self.hpMax = newHP
+        #print 'Ship Status - RR: '+str(self.rechargeRate)+', EC: '+str(self.energyMax)+', maxHP:'+str(self.hpMax)
 
     def updateThis(self):
         for h in self.hull:
@@ -53,8 +78,8 @@ class ship:
         if self.y < 0: self.y = 0;
         if self.y > (432-self.h): self.y = (432-self.h)
         self.energy += self.rechargeRate
-        if self.energy > 100:
-            self.energy = 100
+        if self.energy > self.energyMax:
+            self.energy = self.energyMax
     
     def fire(self):
         if self.fireCount%(60/self.firingRate) == 0:

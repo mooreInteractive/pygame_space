@@ -52,18 +52,22 @@ def dropLoot(x,y):
                 loot.insert(0, Loot.loot('hull',pygame.Rect(x, y, 18, 8)))
             elif rando == 3:
                 loot.insert(0, Loot.loot('gun',pygame.Rect(x, y, 12, 8)))
-            elif rando > 3: 
+            elif rando == 4:
+                loot.insert(0, Loot.loot('hull',pygame.Rect(x, y, 18, 18)))
+            elif rando > 4: 
                 loot.insert(0, Loot.loot('hull',pygame.Rect(x, y, 8, 8)))
     else:
-        rando1 = random.randint(1,6)
+        rando = random.randint(1,6)
         #print 'round '+str(playCount)+' rando1 = '+str(rando1)
-        if rando1 == 1:
+        if rando == 1:
             loot.insert(0, Loot.loot('hull',pygame.Rect(x, y, 8, 18)))
-        elif rando1 == 2:
+        elif rando == 2:
             loot.insert(0, Loot.loot('hull',pygame.Rect(x, y, 18, 8)))
-        elif rando1 == 3:
+        elif rando == 3:
             loot.insert(0, Loot.loot('hull',pygame.Rect(x, y, 8, 8)))
-        elif rando1 > 3: 
+        elif rando == 4:
+            loot.insert(0, Loot.loot('hull',pygame.Rect(x, y, 18, 18)))
+        elif rando > 4: 
             loot.insert(0, Loot.loot('gun',pygame.Rect(x, y, 12, 8)))
 
 
@@ -113,15 +117,16 @@ def detectCollisions():
                     bullets.remove(b)
                     h.isAttached = False
                     pbrokeHull = True
+                    block.updateStats()
                     #removeFromPlayerInventory(h)
                     break
             if pbrokeHull == True:
                 break
             if thisBull.colliderect(player):
                 bullets.remove(b)
-                block.hp -= 20
+                block.hp -= 10
                 #print 'Ship HP: ' + str(block.hp)
-                if block.hp == 0:
+                if block.hp <= 0:
                     block.hp = 100
                     block.color = (0, 128, 255)
                     mainMenu.__init__(block)

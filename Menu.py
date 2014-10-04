@@ -60,6 +60,51 @@ class mainMenu:
                     newinv.insert(0,[item[0],item[1],item[2], 1, pygame.Rect(0,0,50,50)])
 
         self.playerInv = newinv
+
+    def arrangeEquipped(self, newEqp):
+        #Make sure no pieces of euipment are overlapping each other.
+        #use newEqp[4].x, newEqp[4].y, newEqp[1], newEqp[2] as Rect 
+        someOverlapping = True
+        while someOverlapping:
+            eqpRects = []
+            for e in range(0,len(self.equippedInv)):
+                eq = self.equippedInv[e]
+                eqpRects.insert(len(eqpRects), pygame.Rect(eq[4].x, eq[4].y, eq[1], eq[2]))
+
+            olEqpIndex = pygame.Rect(newEqp[4].x, newEqp[4].y, newEqp[1], newEqp[2]).collidelist(eqpRects)
+            if olEqpIndex > -1:
+                olEqp = self.equippedInv[olEqpIndex]
+                topDiff = newEqp[4].y - (olEqp[4].y+olEqp[2])
+                bottomDiff = (newEqp[4].y+newEqp[2]) - olEqp[4].y
+                leftDiff = newEqp[4].x - (olEqp[4].x+olEqp[1])
+                rightDiff = (newEqp[4].x + newEqp[1])  - olEqp[4].x
+
+                diffs = [leftDiff, topDiff, rightDiff, bottomDiff]
+                highest = 0
+                for d in diffs:
+                    if abs(d) > highest:
+                        highest = abs(d)
+                        highestIndex = diffs.index(d)
+                if highestIndex == 0:
+                    #move to the right
+                    newEqp[4].x -= rightDiff
+                if highestIndex == 1:
+                    #move down
+                    newEqp[4].y -= bottomDiff
+                if highestIndex == 2:
+                    #move to the left
+                    newEqp[4].x -= leftDiff
+                if highestIndex == 3:
+                    #move up
+                    newEqp[4].y -= topDiff
+                test = newEqp[4].collidelist(eqpRects)
+                if test == -1:
+                    someOverlapping = False
+
+            else:
+                someOverlapping = False
+        self.equippedInv.insert(0, newEqp)
+
     def getUserInput(self, initGame, done, events):
         for event in events:
             if event.type == pygame.QUIT:
@@ -72,11 +117,12 @@ class mainMenu:
                     if self.gridRect.collidepoint(self.mousePos):
                         self.draggedItem[4].x = math.floor((self.mousePos[0] - (self.draggedItem[1]/2)) + 0.5)
                         self.draggedItem[4].y = math.floor((self.mousePos[1] - (self.draggedItem[2]/2))+ 0.5)
-                        self.equippedInv.insert(0, self.draggedItem)
+                        self.arrangeEquipped(self.draggedItem)
+                        
                     else:
                         inInv = False
                         for _inv in self.playerInv:
-                            if _inv[0] == self.draggedItem[0]:
+                            if _inv[0] == self.draggedItem[0] and _inv[1] == self.draggedItem[1] and _inv[2] == self.draggedItem[2]:
                                 _inv[3] += 1
                                 inInv = True
                         if inInv == False:
