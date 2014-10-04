@@ -13,7 +13,7 @@ class ship:
     fireCount = 0
     firing = False
     energy = 100
-    rechargeRate = 0.2
+    rechargeRate = 0.1
     hp = 100
     hull = []
     inventory = [['hull',8,8,1,pygame.Rect(0,0,50,50)],['hull',8,8,1,pygame.Rect(0,0,50,50)],['gun',12,8,1,pygame.Rect(0,0,50,50)]]

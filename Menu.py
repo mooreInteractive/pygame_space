@@ -44,9 +44,9 @@ class mainMenu:
         #self.playerInv
         del self.equippedInv[:]
         del player.hull[:]
-        print 'before menu init: '+str(player.inventory)
-        #for i in self.playerInv:
-            #newinv.insert(0, i)
+        #print 'before menu init: '+str(player.inventory)
+        for i in self.playerInv:
+            newinv.insert(0, i)
         for item in player.inventory:
             if len(newinv) == 0:
                 newinv.insert(0,[item[0],item[1],item[2], 1, pygame.Rect(0,0,50,50)])

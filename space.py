@@ -44,33 +44,27 @@ def dropLoot(x,y):
     if playCount > 1:
         randoBool = random.randint(1,2)
         rando = random.randint(1,6)
+        #print 'round '+str(playCount)+' rando = '+str(rando)
         if randoBool == 2:
             if rando == 1:
-                drop = Loot.loot('hull',pygame.Rect(x, y, 8, 18))
-                loot.insert(0, drop)
-            if rando == 2:
-                drop = Loot.loot('hull',pygame.Rect(x, y, 18, 8))
-                loot.insert(0, drop)
-            if rando == 3:
-                drop = Loot.loot('gun',pygame.Rect(x, y, 12, 8))
-                loot.insert(0, drop)
-            if rando > 3: 
-                drop = Loot.loot('hull',pygame.Rect(x, y, 8, 8))
-                loot.insert(0, drop)
+                loot.insert(0, Loot.loot('hull',pygame.Rect(x, y, 8, 18)))
+            elif rando == 2:
+                loot.insert(0, Loot.loot('hull',pygame.Rect(x, y, 18, 8)))
+            elif rando == 3:
+                loot.insert(0, Loot.loot('gun',pygame.Rect(x, y, 12, 8)))
+            elif rando > 3: 
+                loot.insert(0, Loot.loot('hull',pygame.Rect(x, y, 8, 8)))
     else:
-        rando = random.randint(1,6)
-        if rando == 1:
-            drop = Loot.loot('hull',pygame.Rect(x, y, 8, 18))
-            loot.insert(0, drop)
-        if rando == 2:
-            drop = Loot.loot('hull',pygame.Rect(x, y, 18, 8))
-            loot.insert(0, drop)
-        if rando == 3:
-            drop = Loot.loot('hull',pygame.Rect(x, y, 8, 8))
-            loot.insert(0, drop)
-        if rando > 3: 
-            drop = Loot.loot('gun',pygame.Rect(x, y, 12, 8))
-            loot.insert(0, drop)
+        rando1 = random.randint(1,6)
+        #print 'round '+str(playCount)+' rando1 = '+str(rando1)
+        if rando1 == 1:
+            loot.insert(0, Loot.loot('hull',pygame.Rect(x, y, 8, 18)))
+        elif rando1 == 2:
+            loot.insert(0, Loot.loot('hull',pygame.Rect(x, y, 18, 8)))
+        elif rando1 == 3:
+            loot.insert(0, Loot.loot('hull',pygame.Rect(x, y, 8, 8)))
+        elif rando1 > 3: 
+            loot.insert(0, Loot.loot('gun',pygame.Rect(x, y, 12, 8)))
 
 
 def detectCollisions():
@@ -119,13 +113,13 @@ def detectCollisions():
                     bullets.remove(b)
                     h.isAttached = False
                     pbrokeHull = True
-                    removeFromPlayerInventory(h)
+                    #removeFromPlayerInventory(h)
                     break
             if pbrokeHull == True:
                 break
             if thisBull.colliderect(player):
                 bullets.remove(b)
-                block.hp -= 10
+                block.hp -= 20
                 #print 'Ship HP: ' + str(block.hp)
                 if block.hp == 0:
                     block.hp = 100
@@ -153,6 +147,7 @@ def detectCollisions():
         if player.colliderect(l.rect):
             block.inventory.insert(0, l.inv)
             loot.remove(l)
+            break
 
 def initGame():
     global gamestate, waveCount, enemies, bullets, mainMenu, playCount
@@ -160,20 +155,10 @@ def initGame():
     waveCount = 1
     del enemies[:]
     del bullets[:]
+    del block.inventory[:]
     playCount += 1
     gamestate = 'play'
 
-def removeFromPlayerInventory(inv):
-    for i in block.inventory:
-        if i[1] == inv.w and i[2] == inv.h:
-            if i[0] == 'hull' and inv.isGun == False:
-                block.inventory.remove(i)
-                print 'inv len = '+str(len(block.inventory))
-                return
-            if i[0] == 'gun' and inv.isGun == True:
-                block.inventory.remove(i)
-                print 'inv len = '+str(len(block.inventory))
-                return
 def getUserInput():
     global done
     for event in pygame.event.get():
@@ -186,11 +171,11 @@ def getUserInput():
     if pressed[pygame.K_UP]:
         if block.energy > 0:
             block.y -= block.speed
-            block.energy -= block.speed/4
+            block.energy -= block.speed/5
     if pressed[pygame.K_DOWN]:
         if block.energy > 0: 
             block.y += block.speed
-            block.energy -= block.speed/4
+            block.energy -= block.speed/5
     if pressed[pygame.K_SPACE]:
         block.fire()
     else:

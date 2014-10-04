@@ -2,18 +2,16 @@ import pygame
 import math
 
 class loot:
-    type = 'hull'
+    ltype = 'hull'
     rect = pygame.Rect(0,0,1,1)
     color = (24, 215, 56)
     speed = 1
-    inv = ['hull',8,8,1,pygame.Rect(0,0,50,50)]
+    inv = []
     
-    def __init__(self, type, hullRect):
-        self.type = type
+    def __init__(self, typeLoot, hullRect):
+        self.ltype = typeLoot
         self.rect = hullRect
-        self.inv[1] = hullRect.w
-        self.inv[2] = hullRect.h
-        self.inv[0] = type
+        self.inv = [typeLoot,hullRect.w,hullRect.h,1,pygame.Rect(0,0,50,50)]
 
     
     def updateThis(self):
