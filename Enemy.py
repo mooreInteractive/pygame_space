@@ -17,18 +17,22 @@ class enemy:
     _bullets = []
     _enemies = []
 
-    def __init__(self, pType, pSpeed, bulletsArr, enemiesArr):
+    def __init__(self, pType, pSpeed, bulletsArr, enemiesArr, sety=0):
         self._bullets = bulletsArr
         self._enemies = enemiesArr
-        self.y = random.randint(0, (432-(self.h*1.5)))
-        self.x = random.randint(768, 900)
-        self.yInit = self.y
         self.enType = pType
+        if self.enType == 'grunt-siner-wave':
+            self.y = sety
+            self.x = 775
+        else:
+            self.y = random.randint(0, (432-(self.h*1.5)))
+            self.x = random.randint(768, 900)
+        self.yInit = self.y
         self.speed = pSpeed
 
         self.hull = []
         #print len(self.hull)
-        if self.enType == 'grunt':
+        if self.enType == 'grunt' or self.enType == 'grunt-siner-wave':
             self.hull.append(Hull.hull(8, 8, -4, -4, False, 250, self._bullets))
             self.hull.append(Hull.hull(8, 8, -4, 6, False, 250, self._bullets))
             self.hull.append(Hull.hull(8, 8, 7, -4, False, 250, self._bullets))
@@ -83,6 +87,9 @@ class enemy:
                     h.fire();        
         if self.enType == 'grunt':
             self.x -= self.speed
+        if self.enType == 'grunt-siner-wave':
+            self.x -= self.speed
+            self.y = (150 * math.sin((self.x/4) * 0.5 * math.pi / 120)) + (25+self.yInit)
         if self.enType == 'siner':
             self.x -= self.speed
             self.y = (25 * math.sin(self.x * 0.5 * math.pi / 60)) + (25+self.yInit)

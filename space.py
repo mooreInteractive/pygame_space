@@ -28,16 +28,44 @@ messageBox = Messages.messages()
 bg = Bg.bg()
 bg.img = pygame.image.load("bg.png").convert()
 
+waveDone = False
+lastSpawn = 0
+numSpawned = 0
+lastwave = 0
+randomGroupY = 50
+
 def wave():
-    global waveCount
-    numEn = int(math.ceil(waveCount/3)) + 1
-    for x in range(0, numEn):
-        e = Enemy.enemy('grunt', 3, bullets, enemies)
-        if x > 1:
-            f = Enemy.enemy('siner', 2, bullets, enemies)
-        if x > 3:
-            g = Enemy.enemy('fighter', random.randint(4, 5), bullets, enemies)
-    waveCount += 1
+    global waveCount, waveDone, lastSpawn, numSpawned, lastWave, randomGroupY
+    t = pygame.time.get_ticks()
+    #print str(t - lastSpawn) #str(len(enemies))
+    if waveCount %2 == 1:
+        if not waveDone:
+            if (t - lastSpawn) > 200:
+                a = Enemy.enemy('grunt-siner-wave', 3, bullets, enemies, randomGroupY)
+                lastSpawn = pygame.time.get_ticks()
+            if len(enemies)%5 == 0:
+                f = Enemy.enemy('siner', 2, bullets, enemies)
+            if len(enemies) > 12:
+                waveDone = True
+        if (t - lastSpawn) > 5000 and waveDone:
+            waveCount += 1
+            lastwave = pygame.time.get_ticks()
+            waveDone = False
+            randomGroupY = random.randint(50, 300)
+    else:
+        numEn = int(math.ceil(waveCount/3)) + 1
+        if not waveDone: 
+            for x in range(0, numEn):
+                e = Enemy.enemy('grunt', 3, bullets, enemies)
+                if x > 1:
+                    f = Enemy.enemy('siner', 2, bullets, enemies)
+                if x > 3:
+                    g = Enemy.enemy('fighter', random.randint(4, 5), bullets, enemies)
+                waveDone = True
+        if len(enemies) == 0 and waveDone:
+            waveCount += 1
+            waveDone = False
+    
 
 def dropLoot(x,y):
     global playCount
@@ -188,8 +216,8 @@ def getUserInput():
 
 def updateGameObjects():
     bg.updateThis()
-    if len(enemies) == 0:
-            wave()
+    #if len(enemies) == 0:
+    wave()
     block.updateThis()
     for b in bullets:
         b.updateThis()
