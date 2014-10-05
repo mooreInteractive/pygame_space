@@ -3,19 +3,16 @@ This is my first time using Python, and I like making games, so I’m also learn
 This could end up being anything. I will start converting to an exe soon with py2exe, or pyinstaller, whichever is easier for rapid prototyping.
 
 Main File: Space.py
-  -def detectCollisions
-  -def wave
-  -def initGame
-  -def getUserInput
-  -def updateGameObjects
-  -def drawScreen
   REQUIRES: pygame
   
 Classes:
   -Ship.py
   -Enemy.py
+  -Hull.py
+  -Loot.py
   -Bullet.py
   -Messages.py
+  -Menu.py
   -Hull.py
   -Bg.py
 
@@ -29,8 +26,14 @@ Game Controls:
 Features(current):
   -destructible armor/gun modules
   -3 enemy types
+  -5 hull types
+    -Gun
+    -Armor
+    -Energy Capacity addition
+    -Energy Recharge addition
+    -Ship Hit Points addition
 
 Features(planned):
-  -ship hull connection network
-  -player hull placement
-  -boss with lots of armor/guns
+  -more enemies
+  -improved enemy behaviors
+  -Boss ship
