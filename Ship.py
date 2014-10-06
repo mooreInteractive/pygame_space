@@ -72,6 +72,7 @@ class ship:
             h.updateThis(self.x, self.y)
             if h.deadtimer == 0:
                 self.hull.remove(h)
+                self.updateStats()
         newRed = int(255 - ((self.hp/float(100)) * 255))
         newBlue = int((self.hp/float(100)) * 255)
         self.color = (newRed, 30, newBlue)

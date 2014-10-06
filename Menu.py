@@ -12,6 +12,9 @@ class mainMenu:
     dragging = False
     draggedItem = []
 
+    moText = ''
+    moShow = False
+
     playText = 'Press \'S\' to play.'
     titleText = 'Pygame_Space'
     inventoryText = 'Inventory'
@@ -19,6 +22,12 @@ class mainMenu:
     largefont = pygame.font.SysFont(None, 28)
     basicfont = pygame.font.SysFont(None, 22)
     smallfont = pygame.font.SysFont(None, 18)
+
+    moLabel = basicfont.render(moText, True, (255, 255, 255), (0, 0, 0))
+    moRect = moLabel.get_rect()
+    moRect.x = mousePos[0]+10
+    moRect.y = mousePos[1]
+
     playLabel = basicfont.render(playText, True, (255, 255, 255), (0, 0, 0))
     playRect = playLabel.get_rect()
     playRect.x = 515
@@ -61,6 +70,18 @@ class mainMenu:
 
         self.playerInv = newinv
 
+        for inv in self.playerInv:
+            if inv[0] == 'hull':
+                if inv[1] == 18 and inv[2] == 18:
+                    inv.append('Energy Capacity + 10')
+                if inv[1] == 8 and inv[2] == 18:
+                    inv.append('E Recharge Rate + .6/s')
+                if inv[1] == 18 and inv[2] == 8:
+                    inv.append('Ship HP + 10')
+                if inv[1] == 8 and inv[2] == 8:
+                    inv.append('Nothing. Takes a hit.')
+            if inv[0] == 'gun':
+                inv.append('Shoots when you press SPACEBAR')
     def arrangeEquipped(self, newEqp):
         #Make sure no pieces of euipment are overlapping each other.
         #use newEqp[4].x, newEqp[4].y, newEqp[1], newEqp[2] as Rect 
@@ -112,6 +133,14 @@ class mainMenu:
 
             if event.type == pygame.MOUSEMOTION:
                 self.mousePos = pygame.mouse.get_pos()
+                self.moShow = False
+                for i in self.playerInv:
+                    if i[4].collidepoint(self.mousePos) and self.dragging == False:
+                        self.moShow = True
+                        self.moText = i[5]
+                        self.moLabel = self.basicfont.render(self.moText, True, (255, 255, 255), (0, 0, 0))
+                        self.moRect = self.moLabel.get_rect()
+                        #print 'mouse Over \''+i[5]+'\''
             if event.type == pygame.MOUSEBUTTONUP:
                 if self.dragging:
                     if self.gridRect.collidepoint(self.mousePos):
@@ -158,6 +187,8 @@ class mainMenu:
             block.y = 206
         else: 
             self.startGame = False
+        self.moRect.x = self.mousePos[0] - 30
+        self.moRect.y = self.mousePos[1] + 15
 
     def drawMenuScreen(self, bg, screen, block):
         screen.fill((0, 0, 0))
@@ -217,3 +248,7 @@ class mainMenu:
             	start = (hull[4].x + (hull[1]/2), hull[4].y + (hull[2]/2))
             	end = (hull[4].x + (hull[1]*1.5), hull[4].y + (hull[2]/2))
                 pygame.draw.line(screen, (255,50,50), start,end)
+
+        if self.moShow == True:
+            screen.blit(self.moLabel, self.moRect)
+            #print 'drew mo, '+str(self.moRect)+', '+str(self.moLabel)

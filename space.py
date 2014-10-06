@@ -145,7 +145,6 @@ def detectCollisions():
                     bullets.remove(b)
                     h.isAttached = False
                     pbrokeHull = True
-                    block.updateStats()
                     #removeFromPlayerInventory(h)
                     break
             if pbrokeHull == True:
@@ -204,11 +203,11 @@ def getUserInput():
     if pressed[pygame.K_UP]:
         if block.energy > 0:
             block.y -= block.speed
-            block.energy -= block.speed/5
+            block.energy -= (block.speed - 2)/2
     if pressed[pygame.K_DOWN]:
         if block.energy > 0: 
             block.y += block.speed
-            block.energy -= block.speed/5
+            block.energy -= (block.speed - 2)/2
     if pressed[pygame.K_SPACE]:
         block.fire()
     else:
