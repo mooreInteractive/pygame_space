@@ -172,6 +172,15 @@ def detectCollisions():
                 mainMenu.__init__(block)
                 gamestate = 'menu'
             enemies.remove(n)
+        for h in block.hull[:]:
+                #print hullCount
+                thisHull = pygame.Rect(h.x, h.y, h.w, h.h)
+                if thisEne.colliderect(thisHull) and h.isAttached:
+                    enemies.remove(n)
+                    h.isAttached = False
+                    pbrokeHull = True
+                    #removeFromPlayerInventory(h)
+                    break
             
     #Loot hit Player(block)
     for l in loot[:]:

@@ -71,6 +71,7 @@ class mainMenu:
         self.playerInv = newinv
 
         for inv in self.playerInv:
+            noGunDone = True
             if inv[0] == 'hull':
                 if inv[1] == 18 and inv[2] == 18:
                     inv.append('Energy Capacity + 10')
@@ -82,6 +83,7 @@ class mainMenu:
                     inv.append('Nothing. Takes a hit.')
             if inv[0] == 'gun':
                 inv.append('Shoots when you press SPACEBAR')
+
     def arrangeEquipped(self, newEqp):
         #Make sure no pieces of euipment are overlapping each other.
         #use newEqp[4].x, newEqp[4].y, newEqp[1], newEqp[2] as Rect 
