@@ -165,6 +165,7 @@ class mainMenu:
                 for _inv in self.playerInv:
                     if _inv[4].collidepoint(self.mousePos):
                         self.dragging = True
+                        self.moShow = False
                         if _inv[3] > 1:
                             copyInv = list(_inv)
                             copyInv[4] = pygame.Rect(0,0,50,50)
