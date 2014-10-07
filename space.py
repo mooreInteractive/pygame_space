@@ -172,7 +172,7 @@ def detectCollisions():
                 mainMenu.__init__(block)
                 gamestate = 'menu'
             enemies.remove(n)
-            breaks
+            break
         for h in block.hull[:]:
                 #print hullCount
                 thisHull = pygame.Rect(h.x, h.y, h.w, h.h)
