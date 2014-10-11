@@ -38,33 +38,41 @@ def wave():
     global waveCount, waveDone, lastSpawn, numSpawned, lastWave, randomGroupY
     t = pygame.time.get_ticks()
     #print str(t - lastSpawn) #str(len(enemies))
-    if waveCount %2 == 1:
-        if not waveDone:
-            if (t - lastSpawn) > 200:
-                a = Enemy.enemy('grunt-siner-wave', 3, bullets, enemies, randomGroupY)
-                lastSpawn = pygame.time.get_ticks()
-            if len(enemies)%5 == 0:
-                f = Enemy.enemy('siner', 2, bullets, enemies)
-            if len(enemies) > 12:
-                waveDone = True
-        if (t - lastSpawn) > 5000 and waveDone:
-            waveCount += 1
-            lastwave = pygame.time.get_ticks()
-            waveDone = False
-            randomGroupY = random.randint(50, 300)
-    else:
-        numEn = int(math.ceil(waveCount/3)) + 1
-        if not waveDone: 
-            for x in range(0, numEn):
-                e = Enemy.enemy('grunt', 3, bullets, enemies)
-                if x > 1:
+    if waveCount < 20:
+        if waveCount %2 == 1:
+            if not waveDone:
+                if (t - lastSpawn) > 200:
+                    a = Enemy.enemy('grunt-siner-wave', 3, bullets, enemies, randomGroupY)
+                    lastSpawn = pygame.time.get_ticks()
+                if len(enemies)%5 == 0:
                     f = Enemy.enemy('siner', 2, bullets, enemies)
-                if x > 3:
-                    g = Enemy.enemy('fighter', random.randint(4, 5), bullets, enemies)
-                waveDone = True
+                if len(enemies) > 12:
+                    waveDone = True
+            if (t - lastSpawn) > 5000 and waveDone:
+                waveCount += 1
+                lastwave = pygame.time.get_ticks()
+                waveDone = False
+                randomGroupY = random.randint(50, 300)
+        else:
+            numEn = int(math.ceil(waveCount/3)) + 1
+            if not waveDone: 
+                for x in range(0, numEn):
+                    e = Enemy.enemy('grunt', 3, bullets, enemies)
+                    if x > 1:
+                        f = Enemy.enemy('siner', 2, bullets, enemies)
+                    if x > 3:
+                        g = Enemy.enemy('fighter', random.randint(4, 5), bullets, enemies)
+                    waveDone = True
+            if len(enemies) == 0 and waveDone:
+                waveCount += 1
+                waveDone = False
+    else:
+        if not waveDone:
+            b = Enemy.enemy('boss', 0.5, bullets, enemies)
+            waveDone = True
         if len(enemies) == 0 and waveDone:
-            waveCount += 1
-            waveDone = False
+                gamestate = 'game over'
+
     
 
 def dropLoot(x,y):
@@ -195,6 +203,7 @@ def initGame():
     global gamestate, waveCount, enemies, bullets, mainMenu, playCount
     block.__init__(bullets, mainMenu.equippedInv)
     waveCount = 1
+    waveDone = False
     del enemies[:]
     del bullets[:]
     del block.inventory[:]
@@ -223,6 +232,12 @@ def getUserInput():
     else:
         block.fireCount = 0
 
+def getEndInput():
+    global done
+    for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                done = True
+
 def updateGameObjects():
     bg.updateThis()
     #if len(enemies) == 0:
@@ -250,6 +265,10 @@ def drawScreen():
         l.drawThis(screen)
     messageBox.drawText(screen, block)
 
+def drawScreen():
+    screen.fill((0,0,0))
+    messageBox.drawText(screen, block)
+
 #Main Game Loop
 while not done:
     if gamestate == 'play':
@@ -263,6 +282,10 @@ while not done:
         mainMenu.drawMenuScreen(bg, screen, block)
         if mainMenu.endProgram == True:
             done = True
+    if gamestate == 'game over':
+        #getEndInput()
+        #drawEndScreen()
+        done = True
     pygame.display.flip()
     Clock.tick(60)
         
