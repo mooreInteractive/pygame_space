@@ -71,7 +71,7 @@ def wave():
             b = Enemy.enemy('boss', 0.5, bullets, enemies)
             waveDone = True
         if len(enemies) == 0 and waveDone:
-                gamestate = 'game over'
+                gamestate = 'menu'
 
     
 
@@ -265,9 +265,9 @@ def drawScreen():
         l.drawThis(screen)
     messageBox.drawText(screen, block)
 
-def drawScreen():
+def drawEndScreen():
     screen.fill((0,0,0))
-    messageBox.drawText(screen, block)
+    #messageBox.drawText(screen, block)
 
 #Main Game Loop
 while not done:
@@ -283,8 +283,8 @@ while not done:
         if mainMenu.endProgram == True:
             done = True
     if gamestate == 'game over':
-        #getEndInput()
-        #drawEndScreen()
+        getEndInput()
+        drawEndScreen()
         done = True
     pygame.display.flip()
     Clock.tick(60)
