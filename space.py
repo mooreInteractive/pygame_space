@@ -46,7 +46,7 @@ def wave():
                 if (t - lastSpawn) > 200:
                     a = Enemy.enemy('grunt-siner-wave', 3, bullets, enemies, randomGroupY)
                     lastSpawn = pygame.time.get_ticks()
-                if len(enemies)%5 == 0:
+                if len(enemies)%5 == 0 and waveCount > 9:
                     f = Enemy.enemy('siner', 2, bullets, enemies)
                 if len(enemies) > 12:
                     waveDone = True
