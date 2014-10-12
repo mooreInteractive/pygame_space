@@ -9,6 +9,7 @@ import Messages
 import Bg
 import Menu
 import Loot
+import End
 
 pygame.init()
 screen = pygame.display.set_mode((768, 432))
@@ -23,8 +24,9 @@ playCount = 0
 waveCount = 1
 pygame.time.set_timer(pygame.USEREVENT + 1, 5000)
 block = Ship.ship(bullets, list([]))
-mainMenu = Menu.mainMenu(block);
+mainMenu = Menu.mainMenu(block)
 messageBox = Messages.messages()
+endMessage = End.messages()
 bg = Bg.bg()
 bg.img = pygame.image.load("bg.png").convert()
 
@@ -267,7 +269,9 @@ def drawScreen():
 
 def drawEndScreen():
     screen.fill((0,0,0))
-    #messageBox.drawText(screen, block)
+    bg.drawThis(screen)
+    block.drawThis(screen)
+    endMessage.drawText(screen, block)
 
 #Main Game Loop
 while not done:
@@ -285,7 +289,6 @@ while not done:
     if gamestate == 'game over':
         getEndInput()
         drawEndScreen()
-        done = True
     pygame.display.flip()
     Clock.tick(60)
         
