@@ -37,9 +37,9 @@ lastwave = 0
 randomGroupY = 50
 
 def wave():
-    global waveCount, waveDone, lastSpawn, numSpawned, lastWave, randomGroupY
+    global waveCount, waveDone, lastSpawn, numSpawned, lastWave, randomGroupY, gamestate
     t = pygame.time.get_ticks()
-    #print str(t - lastSpawn) #str(len(enemies))
+    #print 'en: ' + str(len(enemies)) + ', wave: ' + str(waveCount) #str(t - lastSpawn) 
     if waveCount < 20:
         if waveCount %2 == 1:
             if not waveDone:
@@ -73,13 +73,14 @@ def wave():
             b = Enemy.enemy('boss', 0.5, bullets, enemies)
             waveDone = True
         if len(enemies) == 0 and waveDone:
-                gamestate = 'menu'
+            gamestate = 'game over'
+            #print 'game should be over now'
 
     
 
 def dropLoot(x,y):
     global playCount
-    if playCount > 1:
+    if playCount > 0:
         randoBool = random.randint(1,2)
         rando = random.randint(1,6)
         #print 'round '+str(playCount)+' rando = '+str(rando)
